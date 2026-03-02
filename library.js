@@ -46,8 +46,8 @@ const winston = require.main.require('winston');
 	 */
 
 const constants = Object.freeze({
-	type: '', // Either 'oauth' or 'oauth2'
-	name: '', // Something unique to your OAuth provider in lowercase, like "github", or "nodebb"
+	type: 'oauth2', // Either 'oauth' or 'oauth2'
+	name: 'vtubeando_id', // Something unique to your OAuth provider in lowercase, like "github", or "nodebb"
 	oauth: {
 		requestTokenURL: '',
 		accessTokenURL: '',
@@ -56,12 +56,12 @@ const constants = Object.freeze({
 		consumerSecret: nconf.get('oauth:secret'), // don't change this line
 	},
 	oauth2: {
-		authorizationURL: '',
-		tokenURL: '',
+		authorizationURL: 'https://auth.vtubeando.net/application/o/authorize/',
+		tokenURL: 'https://auth.vtubeando.net/application/o/token/',
 		clientID: nconf.get('oauth:id'), // don't change this line
 		clientSecret: nconf.get('oauth:secret'), // don't change this line
 	},
-	userRoute: '', // This is the address to your app's "user profile" API endpoint (expects JSON)
+	userRoute: 'https://auth.vtubeando.net/api/v3/core/users/', // This is the address to your app's "user profile" API endpoint (expects JSON)
 });
 
 const OAuth = module.exports;
@@ -175,10 +175,10 @@ OAuth.parseUserReturn = function (data, callback) {
 	// Everything else is optional.
 
 	// Find out what is available by uncommenting this line:
-	// console.log(data);
+	//console.log(data);
 
 	const profile = {};
-	profile.id = data.id;
+	profile.id = data.uid;
 	profile.displayName = data.name;
 	profile.emails = [{ value: data.email }];
 
@@ -186,8 +186,8 @@ OAuth.parseUserReturn = function (data, callback) {
 	// profile.isAdmin = data.isAdmin ? true : false;
 
 	// Delete or comment out the next TWO (2) lines when you are ready to proceed
-	process.stdout.write('===\nAt this point, you\'ll need to customise the above section to id, displayName, and emails into the "profile" object.\n===');
-	return callback(new Error('Congrats! So far so good -- please see server log for details'));
+	//process.stdout.write('===\nAt this point, you\'ll need to customise the above section to id, displayName, and emails into the "profile" object.\n===');
+	//return callback(new Error('Congrats! So far so good -- please see server log for details'));
 
 	// eslint-disable-next-line
 		callback(null, profile);
@@ -220,8 +220,8 @@ OAuth.login = async (payload) => {
 		});
 
 		// Automatically confirm user email
-		// await User.setUserField(uid, 'email', email);
-		// await User.email.confirmByUid(uid);
+		await User.setUserField(uid, 'email', email);
+		await User.email.confirmByUid(uid);
 	}
 
 	// Save provider-specific information to the user
