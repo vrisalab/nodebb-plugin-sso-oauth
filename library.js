@@ -161,10 +161,18 @@ OAuth.getStrategy = function (strategies, callback) {
 
 		strategies.push({
 			name: constants.name,
+			labels: {
+				login: "Accede con VTID",
+				register: "Registrate con VTID"
+			},
 			url: `/auth/${constants.name}`,
 			callbackURL: `/auth/${constants.name}/callback`,
 			icon: 'fa-check-square',
+			icons: {
+				normal:'fa fa-id-card-o',
+			},
 			scope: (constants.scope || '').split(','),
+			color: '#107ea0',
 		});
 
 		callback(null, strategies);

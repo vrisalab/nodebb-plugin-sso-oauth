@@ -1,7 +1,7 @@
 {
-  "name": "nodebb-plugin-sso-oauth",
+  "name": "nodebb-plugin-sso-oauth-vtubeando",
   "version": "0.5.1",
-  "description": "NodeBB Generic OAuth SSO",
+  "description": "NodeBB Generic OAuth SSO for VTubeando",
   "main": "library.js",
   "repository": {
     "type": "git",
