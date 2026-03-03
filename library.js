@@ -179,7 +179,7 @@ OAuth.parseUserReturn = function (data, callback) {
 
 	const profile = {};
 	profile.id = data.uid;
-	profile.displayName = data.name;
+	profile.displayName = data.name || data.username;
 	profile.emails = [{ value: data.email }];
 
 	// Do you want to automatically make somebody an admin? This line might help you do that...
