@@ -61,7 +61,7 @@ const constants = Object.freeze({
 		clientID: nconf.get('oauth:id'), // don't change this line
 		clientSecret: nconf.get('oauth:secret'), // don't change this line
 	},
-	userRoute: 'https://auth.vtubeando.net/api/v3/core/users/', // This is the address to your app's "user profile" API endpoint (expects JSON)
+	userRoute: 'https://auth.vtubeando.net/application/o/userinfo/', // This is the address to your app's "user profile" API endpoint (expects JSON)
 });
 
 const OAuth = module.exports;
@@ -95,6 +95,8 @@ OAuth.getStrategy = function (strategies, callback) {
 
 				this._oauth.get(constants.userRoute, token, secret, (err, body/* , res */) => {
 					if (err) {
+						winston.error("Failed to get user route data");
+						winston.error(err);
 						return done(err);
 					}
 
@@ -123,6 +125,8 @@ OAuth.getStrategy = function (strategies, callback) {
 
 				this._oauth2.get(constants.userRoute, accessToken, (err, body/* , res */) => {
 					if (err) {
+						winston.error("Failed to get user route data");
+						winston.error(err);
 						return done(err);
 					}
 
@@ -178,9 +182,11 @@ OAuth.parseUserReturn = function (data, callback) {
 	//console.log(data);
 
 	const profile = {};
-	profile.id = data.uid;
-	profile.displayName = data.name || data.username;
+	profile.id = data.sub;
+	profile.displayName = data.preferred_username;
 	profile.emails = [{ value: data.email }];
+
+	//console.log(profile);
 
 	// Do you want to automatically make somebody an admin? This line might help you do that...
 	// profile.isAdmin = data.isAdmin ? true : false;
